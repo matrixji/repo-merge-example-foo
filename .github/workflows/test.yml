@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: bar
+          repository: matrixji/repo-merge-example-bar
+      - name: patch
+        run: |
+          echo "Modify $(date)" >> bar >> README.md
+      - uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: bar
+          branch: pr
+          branch-suffix: timestamp
+          title: "auto pr test"
+          commit-message: "auto pr test"
+          delete-branch: true
+          push-to-fork: matrixji/repo-merge-example-bar
+
