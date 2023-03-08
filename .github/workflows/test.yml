@@ -13,7 +13,7 @@ jobs:
           repository: matrixji/repo-merge-example-bar
       - name: patch
         run: |
-          echo "Modify $(date)" >> bar >> README.md
+          echo "Modify $(date)" >> bar/README.md
       - uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
