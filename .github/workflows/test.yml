@@ -11,14 +11,16 @@ jobs:
     steps:
       - uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            console.log(context)
-            github.rest.issues.post({
+            let refs = context.payload.ref.split('/')
+            let versionText = refs[refs.length-1].substrins(1)
+            github.rest.issues.createxxx({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: 'repo-merge-example-bar',
-              title: '',
+              title: 'ci: promote version ' + versionText,
               assignees: ['matrixji'],
-              body: ''
+              body: '### Devlake New Version\n\n' + versionText
             })
 
