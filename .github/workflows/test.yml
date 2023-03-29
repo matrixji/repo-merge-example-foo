@@ -2,25 +2,29 @@ name: Test
 
 on:
   push:
-    tags:
-      - 'v*'
 
 jobs:
-  pull-request:
-    runs-on: ubuntu-latest
+  test:
+    name: Test ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["macos-11", "macos-12"]
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            let refs = context.payload.ref.split('/')
-            let versionText = refs[refs.length-1].substring(1)
-            github.rest.issues.createxxx({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: 'repo-merge-example-bar',
-              title: 'ci: promote version ' + versionText,
-              assignees: ['matrixji'],
-              body: '### Devlake New Version\n\n' + versionText
-            })
+          python-version: '3.8'
+      - name: Run hello milvus
+        run: |
+          mkdir dist
+          cd dist
+          wget https://files.pythonhosted.org/packages/f8/bd/b1d3f602e7f27d6a0a676c9d510051d4d4fcf0ac72f2d09f203403f1b609/milvus-2.2.4-py3-none-macosx_11_0_x86_64.whl
+          cd ..
+          python3 -m pip install wheel setuptools
+          python3 -m pip install "$(echo dist/*.whl)[client]"
+          cd examples
+          python3 example.py
 
