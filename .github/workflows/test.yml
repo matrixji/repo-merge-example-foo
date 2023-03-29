@@ -23,6 +23,10 @@ jobs:
           cd dist
           wget https://files.pythonhosted.org/packages/f8/bd/b1d3f602e7f27d6a0a676c9d510051d4d4fcf0ac72f2d09f203403f1b609/milvus-2.2.4-py3-none-macosx_11_0_x86_64.whl
           cd ..
+          arch
+          uname -m
+          uname -a
+          python3 -m pip debug --verbose
           python3 -m pip install wheel setuptools
           python3 -m pip install "$(echo dist/*.whl)[client]"
           cd examples
